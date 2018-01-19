@@ -13,7 +13,7 @@ urlpatterns = [
     url(r'^$', index),
     url(r'^health$', health),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^polls/', include('helloworld.urls')),
+    url(r'^compress/', include('helloworld.urls')),
 ]
 
 if settings.DEBUG:
