@@ -6,5 +6,7 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^compress$', views.index, name='index'),
     url(r'^decompress$', views.hf_decompress, name='hf_decompress'),
-    url(r'^download/(?P<file_name>[\w\.-]+)/$', views.download, name='download')
+    url(r'^lzw-compress$', views.lzw_compress, name='lzw_index'),
+    url(r'^lzw-decompress$', views.lzw_decompress, name='lzw_decompress'),
+    url(r'^download/(?P<file_name>.+)/$', views.download, name='download')
 ]
