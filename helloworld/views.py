@@ -25,10 +25,10 @@ def index(request):
         f_path = os.path.join('compress',myfile.name)
         filename = fs.save(f_path, myfile)
         result_path = huffman.compress(os.path.join(settings.MEDIA_ROOT,f_path))
-        result_fule = os.path.split(result_path)[-1]
+        result_file = os.path.split(result_path)[-1]
         uploaded_file_url = fs.url(filename)
         return render(request, 'index.html', {
-            'uploaded_file_url': result_fule
+            'uploaded_file_url': result_file
         })
     return render(request, 'index.html')
 
@@ -41,3 +41,21 @@ def download(request, file_name):
     response['Content-Length'] = os.stat(file_path).st_size
     response['Content-Disposition'] = 'attachment; filename=%s' % smart_str(file_name) 
     return response
+
+def hf_decompress(request):
+    if request.method == 'POST' and request.FILES['myfile']:
+        files = glob.glob('media/decompress/*')
+        for f in files:
+            os.remove(f)
+        files = glob.glob('media/result/*')
+        for f in files:
+            os.remove(f)
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        f_path = os.path.join('decompress',myfile.name)
+        filename = fs.save(f_path, myfile)
+        result_path = huffman.decompress(os.path.join(settings.MEDIA_ROOT,f_path))
+        return render(request, 'index.html', {
+            'uploaded_file_url': result_path
+        })
+    return render(request, 'index.html')

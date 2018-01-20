@@ -4,6 +4,7 @@ import os
 from bitstring import BitArray
 import json
 import pickle
+import codecs
 
 DIR_DATA = "media/"
 DIR_HUFFMAN = DIR_DATA
@@ -89,6 +90,7 @@ def convert_bin_to_byte(content):
     return b
 #compress
 def compress(path):
+    temp_reverse = {}
     tree = []
     encoded_sympol = {}
     tempname, _ = os.path.splitext(path)
@@ -99,20 +101,15 @@ def compress(path):
         table_frequency = sort_table_frequency(frequency)
         tree = tree_maker(tree,table_frequency)
         encoded_tree = encoded(encoded_sympol,temp_reverse,tree)
-        file_dict = os.path.join(DIR_HUFFMAN,filename[-1] + "-dictionary" +".txt")
-        # with open(file_dict,'w+') as fd:
-        #     fd.write(json.dumps(encoded_sympol))
+        file_dict = os.path.join(DIR_HUFFMAN,filename[-1] + ".dict")
         encoded_content = convert_text_to_code(encoded_sympol,content)
         new_content = prepare_to_convert_bin_to_byte(encoded_content)
         byte_content = convert_bin_to_byte(new_content)
 
-    file_com = os.path.join(DIR_HUFFMAN,filename[-1] + ".bin")
-    # with open(file_com, 'wb') as o:
-    #     o.write(bytes(byte_content))
-    final_path = os.path.join(DIR_DATA,'result',filename[-1] + ".final")
-    pickle.dump((encoded_sympol, bytes(byte_content)), open(final_path,"wb"))
+    file_com = os.path.join(DIR_HUFFMAN,"result", filename[-1] + ".bin")
+    pickle.dump((temp_reverse, byte_content), open(file_com,'wb'))
     print ("Completely compressed")
-    return final_path
+    return file_com
 #decode code
 def decode(new_content):
     temp = new_content.bin
@@ -122,23 +119,24 @@ def decode(new_content):
     return temp[added_num:]
 #decompress
 def decompress(path):
-    with open (path,'rb') as f:
-        content = f.read()
-        new_content = BitArray(bytes = content)
-        new_content = decode(new_content)
-        current_code = ""
-        decoded_text = ""
-        for bit in new_content:
-            current_code += bit
-            if (current_code in temp_reverse):
-                character = temp_reverse[current_code]
-                decoded_text += character
-                current_code = ""
+    pack = pickle.load(open(path,'rb'))
+    temp_reverse = pack[0]
+    content = pack[1]
+    new_content = BitArray(bytes = content)
+    new_content = decode(new_content)
+    current_code = ""
+    decoded_text = ""
+    for bit in new_content:
+        current_code += bit
+        if (current_code in temp_reverse):
+            character = temp_reverse[current_code]
+            decoded_text += character
+            current_code = ""
     temp_reverse.clear()
     tempname, _ = os.path.splitext(path)
     filename = tempname.split("/")
-    file_decom = filename[-1] + "-decoded" + ".txt"
-    with open(file_decom, "w+", encoding='utf-8') as o:
+    file_decom = "media/result/" + filename[-1] + "-decoded" + ".txt"
+    with codecs.open(file_decom, "w+", encoding='utf-8') as o:
         o.write(decoded_text)
     print("Completely decompressed")
-    return (len(new_content))
+    return filename[-1] + "-decoded" + ".txt"

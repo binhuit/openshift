@@ -12,10 +12,20 @@
         $(function () {
 
             //when input's value changes
-            $(".myBtn").click(function (e) {
-                if($("input:file").val())
+            $(".myBtn1").click(function (e) {
+								file_name = $("input:file").val();
+                if(file_name)
                 {
-                  $("#main_form").submit();
+									if (file_name.endsWith(".txt"))
+									{
+										$("#main_form").submit();
+										$('#main_form').attr('action', 'compress');
+									}
+									else
+									{
+										alert("Please select text file *.txt")
+										e.preventDefault();
+									}
                 }
                 else
                 {
@@ -23,6 +33,27 @@
                   e.preventDefault();
                 };
             });
+            $(".myBtn2").click(function (e) {
+							file_name = $("input:file").val();
+							if(file_name)
+							{
+								if (file_name.endsWith(".bin"))
+								{
+									$("#main_form").submit();
+									$('#main_form').attr('action', 'decompress');
+								}
+								else
+								{
+									alert("Please select bin file *.bin")
+									e.preventDefault();
+								}
+							}
+							else
+							{
+								alert("Please select file to upload");
+								e.preventDefault();
+							};
+					});
         });
       </script>
 			<style>
@@ -68,8 +99,8 @@
 									<input type="file" class="form-control-file" id="upload_file" name="myfile" id="fileUpload">
 								</div>
 								<div class="text-center">
-									<button type="submit" class="btn btn-success myBtn" name="load-file">Compress</button>
-									<button type="submit" class="btn btn-danger myBtn" name="load-file">Decompress</button>
+									<button type="submit" class="btn btn-success myBtn1" name="load-file">Compress</button>
+									<button type="submit" class="btn btn-danger myBtn2" name="load-file">Decompress</button>
 								</div>
 							</form>
             </div>
