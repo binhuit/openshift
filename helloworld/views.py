@@ -10,6 +10,7 @@ import glob
 from . import huffman
 from django.conf import settings
 from . import lzw
+from . import sf
 # Create your views here.
 
 
@@ -98,3 +99,42 @@ def lzw_decompress(request):
             'uploaded_file_url': result_path
         })
     return render(request, 'lzw.html')
+
+
+def sf_compress(request):
+    if request.method == 'POST' and request.FILES['myfile']:
+        files = glob.glob('media/compress/*')
+        for f in files:
+            os.remove(f)
+        files = glob.glob('media/result/*')
+        for f in files:
+            os.remove(f)
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        f_path = os.path.join('compress',myfile.name)
+        filename = fs.save(f_path, myfile)
+        result_path = sf.compress(os.path.join(settings.MEDIA_ROOT,f_path))
+        result_file = os.path.split(result_path)[-1]
+        uploaded_file_url = fs.url(filename)
+        return render(request, 'sf.html', {
+            'uploaded_file_url': result_file
+        })
+    return render(request, 'sf.html')
+
+def sf_decompress(request):
+    if request.method == 'POST' and request.FILES['myfile']:
+        files = glob.glob('media/decompress/*')
+        for f in files:
+            os.remove(f)
+        files = glob.glob('media/result/*')
+        for f in files:
+            os.remove(f)
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        f_path = os.path.join('decompress',myfile.name)
+        filename = fs.save(f_path, myfile)
+        result_path = sf.decompress(os.path.join(settings.MEDIA_ROOT,f_path))
+        return render(request, 'sf.html', {
+            'uploaded_file_url': result_path
+        })
+    return render(request, 'sf.html')

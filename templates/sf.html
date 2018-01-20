@@ -19,7 +19,7 @@
 									if (file_name.endsWith(".txt"))
 									{
 										$("#main_form").submit();
-										$('#main_form').attr('action', 'lzw-compress');
+										$('#main_form').attr('action', 'sf-compress');
 									}
 									else
 									{
@@ -40,7 +40,7 @@
 								if (file_name.endsWith(".bin"))
 								{
 									$("#main_form").submit();
-									$('#main_form').attr('action', 'lzw-decompress');
+									$('#main_form').attr('action', 'sf-decompress');
 								}
 								else
 								{
@@ -81,13 +81,13 @@
 						<div class="row">
 							<ul class="nav nav-pills nav-fill col">
 									<li class="nav-item">
-										<a class="nav-link " href="{% url 'index' %}">Huffman</a>
+										<a class="nav-link" href="{% url 'index' %}">Huffman</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link active" href="{% url 'lzw_index' %}">LZW</a>
+										<a class="nav-link" href="{% url 'lzw_index' %}">LZW</a>
 									</li>
-									<li class="nav-item">
-										<a class="nav-link" href="{% url 'sf_index' %}">Shannon</a>
+									<li class="nav-item ">
+										<a class="nav-link active" href="{% url 'sf_index' %}">Shannon</a>
 									</li>
 							</ul>
             </div>
@@ -115,7 +115,7 @@
               </ul>
               {% endif %}
             </div>
-            <p><a href="{% url 'lzw_index' %}">Return to home</a></p>
+            <p><a href="{% url 'sf_index' %}">Return to home</a></p>
 					</div>
 				<div class='col-md-5'>
 				</div>
