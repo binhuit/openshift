@@ -28,9 +28,19 @@ def index(request):
         filename = fs.save(f_path, myfile)
         result_path = huffman.compress(os.path.join(settings.MEDIA_ROOT,f_path))
         result_file = os.path.split(result_path)[-1]
+
+
+        size_before = os.path.getsize(os.path.join(settings.MEDIA_ROOT,f_path)) / 1024
+        size_after = os.path.getsize(os.path.join(settings.MEDIA_ROOT,'result',result_file)) / 1024
+        compress_ratio = size_before/size_after
+        file_info = {
+            'size_before': round(size_before, 4),
+            'size_after': round(size_after, 4),
+            'ratio': round(compress_ratio, 4)
+        }
         uploaded_file_url = fs.url(filename)
         return render(request, 'index.html', {
-            'uploaded_file_url': result_file
+            'uploaded_file_url': result_file, 'info': file_info
         })
     return render(request, 'index.html')
 
@@ -77,8 +87,16 @@ def lzw_compress(request):
         result_path = lzw.compress(os.path.join(settings.MEDIA_ROOT,f_path))
         result_file = os.path.split(result_path)[-1]
         uploaded_file_url = fs.url(filename)
+        size_before = os.path.getsize(os.path.join(settings.MEDIA_ROOT,f_path)) / 1024
+        size_after = os.path.getsize(os.path.join(settings.MEDIA_ROOT,'result',result_file)) / 1024
+        compress_ratio = size_before/size_after
+        file_info = {
+            'size_before': round(size_before, 4),
+            'size_after': round(size_after, 4),
+            'ratio': round(compress_ratio, 4)
+        }
         return render(request, 'lzw.html', {
-            'uploaded_file_url': result_file
+            'uploaded_file_url': result_file, 'info':file_info
         })
     return render(request, 'lzw.html')
 
@@ -116,8 +134,17 @@ def sf_compress(request):
         result_path = sf.compress(os.path.join(settings.MEDIA_ROOT,f_path))
         result_file = os.path.split(result_path)[-1]
         uploaded_file_url = fs.url(filename)
+        
+        size_before = os.path.getsize(os.path.join(settings.MEDIA_ROOT,f_path)) / 1024
+        size_after = os.path.getsize(os.path.join(settings.MEDIA_ROOT,'result',result_file)) / 1024
+        compress_ratio = size_before/size_after
+        file_info = {
+            'size_before': round(size_before, 4),
+            'size_after': round(size_after, 4),
+            'ratio': round(compress_ratio, 4)
+        }
         return render(request, 'sf.html', {
-            'uploaded_file_url': result_file
+            'uploaded_file_url': result_file, 'info':file_info
         })
     return render(request, 'sf.html')
 
